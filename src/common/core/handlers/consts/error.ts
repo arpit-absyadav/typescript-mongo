@@ -1,0 +1,16 @@
+export const ERROR = {
+  TOKEN_EXPIRED_ERROR: 'TokenExpiredError',
+  JWT_ERROR: 'JsonWebTokenError',
+  SYNTAX_ERROR: 'SyntaxError',
+  MISSING_REQUIRED_PARAMETER: 'MissingRequiredParameter',
+  VALIDATION_ERROR: 'ValidationError',
+  CONFLICT: 'Conflict',
+  RESOURCE_NOT_FOUND: 'ResourceNotFound',
+  NOT_FOUND: 'NotFound',
+  RE_AUTHENTICATION: 'Reauthentication',
+  PRECONDITION_FAILED: 'PreconditionFailed',
+  FORBIDDEN: 'Forbidden',
+  EXPIRED: 'Expired',
+  MONGO_ERROR: 'MongoError',
+  MONGO_11000: '11000',
+};
