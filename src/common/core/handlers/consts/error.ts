@@ -13,4 +13,5 @@ export const ERROR = {
   EXPIRED: 'Expired',
   MONGO_ERROR: 'MongoError',
   MONGO_11000: '11000',
+  TOO_MANY_REQUESTS: 'TooManyRequests',
 };

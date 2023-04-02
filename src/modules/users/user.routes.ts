@@ -1,13 +1,14 @@
 import { UpdateUserValidator } from './validatiors/update-user.validation';
 import { Router } from 'express';
 import { UserController } from './user.controller';
-import { IRoute } from 'common/core/interfaces';
+import { IRoute } from '../../common/core/interfaces';
 import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validatiors';
 import { CreateUserValidator } from './validatiors';
+import RateLimitor from '../../common/core/middlewares/rate-limiter';
 
 export class UserRoutes implements IRoute {
   public router = Router();
@@ -37,6 +38,11 @@ export class UserRoutes implements IRoute {
       this.userController.getUserListCount,
     ]);
     this.router.get(`/`, [
+      RateLimitor({
+        points: 10, // 10 Requests
+        duration: 10, // 10 Seconds
+        message: 'Too many requests, please try again later.',
+      }),
       RequestValidator({
         validators: ListValidator,
         type: VALIDATION_TYPE.REQ_QUERY,

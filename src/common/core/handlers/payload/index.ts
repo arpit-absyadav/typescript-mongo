@@ -97,6 +97,14 @@ export default class Payload {
           details,
         });
         break;
+      case ERROR.TOO_MANY_REQUESTS:
+        payload = this.payloadSchema.error({
+          name,
+          error: err,
+          code: RESPONSE_CODE.TOO_MANY_REQUESTS,
+          details,
+        });
+        break;
       default:
         payload = this.payloadSchema.error({
           name,
@@ -106,6 +114,8 @@ export default class Payload {
         });
         break;
     }
+    console.log('payload', payload);
+
     return payload;
   }
 
