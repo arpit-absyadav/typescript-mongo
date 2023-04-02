@@ -1,5 +1,5 @@
 import { IErrorPayload, ISuccessPayload } from './../../interfaces';
-import { ERROR, STATUS } from '../consts';
+import { ERROR, RESPONSE_CODE } from '../consts';
 import PayloadSchema from './schema';
 export default class Payload {
   private payloadSchema = new PayloadSchema();
@@ -11,7 +11,8 @@ export default class Payload {
   public errorPayload(err: IErrorPayload | any): any {
     console.error('------------');
     console.error(err);
-    let { name } = err;
+    // eslint-disable-next-line prefer-const
+    let { name, details = [] } = err;
 
     if (err.key) {
       name = err.key;
@@ -28,7 +29,8 @@ export default class Payload {
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.BAD_REQUEST,
+          code: RESPONSE_CODE.BAD_REQUEST,
+          details,
         });
         break;
       case ERROR.TOKEN_EXPIRED_ERROR:
@@ -37,7 +39,8 @@ export default class Payload {
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.FORBIDDEN,
+          code: RESPONSE_CODE.FORBIDDEN,
+          details,
         });
         break;
       case ERROR.MISSING_REQUIRED_PARAMETER:
@@ -45,7 +48,8 @@ export default class Payload {
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.BAD_REQUEST,
+          code: RESPONSE_CODE.BAD_REQUEST,
+          details,
         });
         break;
       case ERROR.CONFLICT:
@@ -55,7 +59,8 @@ export default class Payload {
         payload = this.payloadSchema.error({
           name,
           error: { message: 'Duplicate' },
-          code: STATUS.CONFLICT,
+          code: RESPONSE_CODE.CONFLICT,
+          details,
         });
         break;
 
@@ -64,35 +69,40 @@ export default class Payload {
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.NOT_FOUND,
+          code: RESPONSE_CODE.NOT_FOUND,
+          details,
         });
         break;
       case ERROR.PRECONDITION_FAILED:
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.PRECONDITION_FAILED,
+          code: RESPONSE_CODE.PRECONDITION_FAILED,
+          details,
         });
         break;
       case ERROR.EXPIRED:
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.GONE,
+          code: RESPONSE_CODE.GONE,
+          details,
         });
         break;
       case ERROR.RE_AUTHENTICATION:
         payload = this.payloadSchema.error({
           name,
           error: err,
-          code: STATUS.UNAUTHORIZED,
+          code: RESPONSE_CODE.UNAUTHORIZED,
+          details,
         });
         break;
       default:
         payload = this.payloadSchema.error({
           name,
           error: { message: 'Internal Server Error' },
-          code: STATUS.INTERNAL_SERVER_ERROR,
+          code: RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+          details,
         });
         break;
     }

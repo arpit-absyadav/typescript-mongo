@@ -1,4 +1,4 @@
-import { STATUS } from './status';
+import { RESPONSE_CODE } from './response-code';
 import { ERROR } from './error';
 
-export { STATUS, ERROR };
+export { RESPONSE_CODE, ERROR };

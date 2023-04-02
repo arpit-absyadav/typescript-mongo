@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import UsersController from './user.controller';
 import { IRoute } from 'common/core/interfaces';
+import { RequestValidator, VALIDATION_TYPE } from '../../common/core/middlewares/validation.middleware';
+import { ListValidator } from '../../common/validatiors';
 export class UserRoutes implements IRoute {
   public router = Router();
   path: '/users';
@@ -13,7 +15,7 @@ export class UserRoutes implements IRoute {
   private init() {
     this.router.post(`/`, this.usersController.addUser);
     this.router.get(`/count`, this.usersController.getUserListCount);
-    this.router.get(`/`, this.usersController.getUserList);
+    this.router.get(`/`, [RequestValidator(ListValidator, VALIDATION_TYPE.REQ_QUERY, true), this.usersController.getUserList]);
     this.router.get(`/:userId`, this.usersController.getUser);
     // this.router.put(`/:userId`, this.usersController.updateUser);
     // this.router.delete(`/:userId`, this.usersController.deleteUser);

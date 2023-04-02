@@ -3,7 +3,7 @@ export interface ICustomError {
     key: string;
     code: number;
     message: string;
-    fields?: any[];
+    details?: any[];
   };
   meta: {
     version: string | number;

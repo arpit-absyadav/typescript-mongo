@@ -1,4 +1,4 @@
-export const STATUS = {
+export const RESPONSE_CODE = {
   OK: 200,
   CREATED: 201,
   ACCEPTED: 202,

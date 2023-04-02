@@ -7,6 +7,7 @@ interface CommonErrorInterface {
   error?: {
     message?: string;
   };
+  details: []
 }
 
 export default class PayloadSchema {
@@ -31,6 +32,7 @@ export default class PayloadSchema {
         key,
         code: err.code,
         message: err.error.message || err,
+        details: err.details,
       },
       meta: {
         version: config.API_VERSION,

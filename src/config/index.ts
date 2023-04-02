@@ -12,7 +12,7 @@ export const config = {
   MONGO_HOST: process.env.MONGO_HOST || 'localhost',
   MONGO_USERNAME: process.env.MONGO_USERNAME || 'root',
   MONGO_PASSWORD: process.env.MONGO_PASSWORD || 'root',
-  MONGO_DB_NAME: process.env.MONGO_DB_NAME || 'pbnpa',
+  MONGO_DB_NAME: process.env.MONGO_DB_NAME || 'mongo_db',
   API_VERSION: 'v1',
 };
 
