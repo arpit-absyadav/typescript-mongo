@@ -1,6 +1,5 @@
-import { UpdateUserValidator } from './validatiors/update-user.validation';
 import { Router } from 'express';
-import { UserController } from './user.controller';
+import { UserController } from './todo.controller';
 import { IRoute } from 'common/core/interfaces';
 import {
   RequestValidator,
@@ -11,7 +10,7 @@ import { CreateUserValidator } from './validatiors';
 
 export class UserRoutes implements IRoute {
   public router = Router();
-  path: '/users';
+  path: '/todo';
   private userController = new UserController();
 
   constructor() {
@@ -19,13 +18,9 @@ export class UserRoutes implements IRoute {
   }
 
   private init() {
-    this.router.post(`/signup`, [
+    this.router.post(`/`, [
       RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
       this.userController.addUser,
-    ]);
-    this.router.post(`/signin`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.signIn,
     ]);
 
     this.router.get(`/count`, [
@@ -44,33 +39,15 @@ export class UserRoutes implements IRoute {
       }),
       this.userController.getUserList,
     ]);
-    this.router.get(`/:userId`, [
+    this.router.get(`/:todoId`, [
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
+        paramName: 'todoId',
       }),
       this.userController.getUser,
     ]);
-    this.router.put(`/:userId`, [
-      RequestValidator({
-        validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
-      }),
-      RequestValidator({
-        validators: UpdateUserValidator,
-        type: VALIDATION_TYPE.REQ_BODY,
-      }),
-      this.userController.updateUser,
-    ]);
-    this.router.delete(`/:userId`, [
-      RequestValidator({
-        validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
-      }),
-      this.userController.deleteUser,
-    ]);
+    this.router.put(`/:todoId`, this.userController.updateUser);
+    this.router.delete(`/:todoId`, this.userController.deleteUser);
   }
 }

@@ -1,7 +1,7 @@
-import { ERROR } from './../../common/core/handlers/consts/error';
+import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
-import { User } from './user.model';
-import { ICreateUser, IUser } from './interfaces/user.interface';
+import { User } from './todo.model';
+import { ICreateUser, IUser } from './interfaces/todo.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
 interface IGetUser {
   id: string;

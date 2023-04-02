@@ -1,15 +1,15 @@
-import { ERROR } from './../../common/core/handlers/consts/error';
-import { HttpException } from './../../common/core/handlers/error/HttpException';
-import { STATUS } from './../../consts/status';
-import { TOKEN_TYPE } from './../../common/core/utils/jwt';
-import { config } from './../../config/index';
+import { ERROR } from '../../common/core/handlers/consts/error';
+import { HttpException } from '../../common/core/handlers/error/HttpException';
+import { STATUS } from '../../consts/status';
+import { TOKEN_TYPE } from '../../common/core/utils/jwt';
+import { config } from '../../config/index';
 import { NextFunction, Request, Response } from 'express';
 import * as bcrypt from 'bcrypt';
-import { UserService } from './user.service';
+import { UserService } from './comment.service';
 import { error, success } from '../../common/core/handlers';
 import { ITokenPayload } from '../../common/core/utils/jwt';
 import { JWT } from '../../common/core/utils';
-import { ICreateUser, IUser } from './interfaces/user.interface';
+import { ICreateUser, IUser } from './interfaces/comment.interface';
 
 export class UserController {
   private userService = new UserService();

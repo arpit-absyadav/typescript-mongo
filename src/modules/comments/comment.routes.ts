@@ -1,6 +1,5 @@
-import { UpdateUserValidator } from './validatiors/update-user.validation';
 import { Router } from 'express';
-import { UserController } from './user.controller';
+import { UserController } from './comment.controller';
 import { IRoute } from 'common/core/interfaces';
 import {
   RequestValidator,
@@ -52,25 +51,7 @@ export class UserRoutes implements IRoute {
       }),
       this.userController.getUser,
     ]);
-    this.router.put(`/:userId`, [
-      RequestValidator({
-        validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
-      }),
-      RequestValidator({
-        validators: UpdateUserValidator,
-        type: VALIDATION_TYPE.REQ_BODY,
-      }),
-      this.userController.updateUser,
-    ]);
-    this.router.delete(`/:userId`, [
-      RequestValidator({
-        validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
-      }),
-      this.userController.deleteUser,
-    ]);
+    this.router.put(`/:userId`, this.userController.updateUser);
+    this.router.delete(`/:userId`, this.userController.deleteUser);
   }
 }

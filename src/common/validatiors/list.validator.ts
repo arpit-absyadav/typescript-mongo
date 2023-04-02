@@ -1,4 +1,13 @@
-import { IsNumber, IsPositive, IsString, IsEnum, IsArray, MinLength, IsOptional } from 'class-validator';
+import {
+  IsNumber,
+  IsPositive,
+  IsString,
+  IsEnum,
+  IsArray,
+  MinLength,
+  IsOptional,
+  Matches,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 enum SortOrder {
@@ -10,23 +19,23 @@ export class ListValidator {
   @IsOptional()
   @IsNumber()
   @IsPositive()
-  @Transform((value) => Number(value))
+  @Transform(({ value }) => Number(value))
   page_no = 1;
 
   @IsOptional()
+  @Transform(({ value }: any) => Number(value))
   @IsNumber()
   @IsPositive()
-  @Transform((value) => Number(value))
   page_size = 10;
 
   @IsOptional()
   @IsString()
-  @Transform((value) => String(value))
+  @Transform(({ value }) => String(value))
   sort_by = 'created_at';
 
   @IsOptional()
   @IsEnum(SortOrder)
-  @Transform((value) => String(value))
+  @Transform(({ value }) => String(value))
   sort_order: SortOrder = SortOrder.DESC;
 
   @IsOptional()
@@ -40,7 +49,7 @@ export class ListValidator {
   search?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsNumber({}, { each: true })
-  ids?: number[];
+  @IsString()
+  @Matches(/^([^;]+;)*([^;]+)?$/)
+  ids?: string;
 }

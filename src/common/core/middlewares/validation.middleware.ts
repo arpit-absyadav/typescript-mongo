@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { error } from '../handlers';
 import { ERROR } from '../handlers/consts';
 import { HttpException } from '../handlers/error/HttpException';
+import { IdValidator } from '../../validatiors/id.validator';
 
 export enum VALIDATION_TYPE {
   REQ_BODY = 'body',
@@ -11,6 +12,14 @@ export enum VALIDATION_TYPE {
   REQ_PARAMS = 'params',
 }
 
+export interface IValidateRequest {
+  validators: InstanceType<any>;
+  type: VALIDATION_TYPE;
+  paramName?: string;
+  skipMissingProperties?: boolean;
+  whitelist?: boolean;
+  forbidNonWhitelisted?: boolean;
+}
 /**
  * @name ValidationMiddleware
  * @description Allows use of decorator and non-decorator based validation
@@ -20,27 +29,37 @@ export enum VALIDATION_TYPE {
  * @param forbidNonWhitelisted If you would rather to have an error thrown when any non-whitelisted properties are present
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export const RequestValidator = (
-  validators: any,
-  type: VALIDATION_TYPE,
+export const RequestValidator = ({
+  validators,
+  type,
+  paramName,
+  forbidNonWhitelisted = false,
   skipMissingProperties = false,
   whitelist = false,
-  forbidNonWhitelisted = false,
-) => {
+}: IValidateRequest) => {
   return (req: Request, res: Response, next: NextFunction): any => {
-    const data = req[type];
+    let data = req[type];
+    if (type === VALIDATION_TYPE.REQ_PARAMS || validators instanceof IdValidator) {
+      console.log('Inside');
 
-    const dto = plainToInstance(validators, data);
-    validateOrReject(dto, { skipMissingProperties, whitelist, forbidNonWhitelisted })
+      data = { id: req[type][paramName] };
+    }
+    console.log(data);
+
+    const dataToValidate = plainToInstance(validators, data);
+    validateOrReject(dataToValidate, { skipMissingProperties, whitelist, forbidNonWhitelisted })
       .then(() => {
-        req.body = dto;
+        req[type] = dataToValidate;
+        if (type === VALIDATION_TYPE.REQ_PARAMS || validators instanceof IdValidator) {
+          req[type] = { [paramName]: data.id, ...req[type] };
+          delete req[type]['id'];
+        }
+
         next();
       })
       .catch((errors) => {
         const [FirstError] = errors;
         const firstKey = Object.keys(FirstError.constraints)[0];
-        console.log(FirstError);
-        console.log(firstKey);
 
         const err: any = new HttpException(
           ERROR.VALIDATION_ERROR,
@@ -49,7 +68,6 @@ export const RequestValidator = (
         );
 
         error.handler(err, req, res, next);
-        // next(new Error(message));
       });
   };
 };

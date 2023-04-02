@@ -1,6 +1,6 @@
-import { STATUS } from './../../consts/status';
+import { STATUS } from '../../consts/status';
 import mongoose, { Document, Schema } from 'mongoose';
-import { IUser } from './interfaces/user.interface';
+import { IUser } from './interfaces/post.interface';
 
 //EXPORT INTERFACE WITH MONGOOSE DOCUMENT
 export interface IUserModel extends IUser, Document {

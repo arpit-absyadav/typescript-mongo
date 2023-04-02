@@ -1,9 +1,8 @@
-import { Transform } from 'class-transformer';
-import { IsNumber, IsPositive } from 'class-validator';
+import { IsString, Validate } from 'class-validator';
+import { IsObjectId } from './object-id.validator';
 
 export class IdValidator {
-  @IsNumber()
-  @IsPositive()
-  @Transform(() => Number)
-  id: number;
+  @IsString()
+  @Validate(IsObjectId)
+  id: string;
 }
