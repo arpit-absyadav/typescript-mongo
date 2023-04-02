@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import { UserService } from './../users/user.service';
 import { error, success } from '../../common/core/handlers';
 import { ICreatePost, IPost } from './interfaces/post.interface';
 import { PostService } from './post.service';
 
 export class PostController {
   private postService = new PostService();
+  private userService = new UserService();
 
   public getPostListCount = async (
     req: Request,
@@ -44,6 +46,7 @@ export class PostController {
   public addPost = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
       const reqBody: ICreatePost = req.body;
+      await this.userService.getOne({ id: reqBody.user_id });
 
       const post: IPost = await this.postService.createOne({
         ...reqBody,

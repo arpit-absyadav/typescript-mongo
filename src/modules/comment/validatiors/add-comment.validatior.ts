@@ -1,20 +1,18 @@
-import { IsString, IsEnum, IsEmail, IsOptional } from 'class-validator';
-import { GENDER } from '../comment.enum';
+import { IsObjectId } from './../../../common/validatiors/object-id.validator';
+import { IsString, Validate } from 'class-validator';
 
 export class CreateCommentValidator {
   @IsString()
-  first_name: string;
+  title: string;
 
   @IsString()
-  last_name: string;
-
-  @IsOptional()
-  @IsEnum(GENDER)
-  gender: GENDER = GENDER.MALE;
-
-  @IsEmail()
-  email: string;
+  body: string;
 
   @IsString()
-  password: string;
+  @Validate(IsObjectId)
+  commented_by: string;
+
+  @IsString()
+  @Validate(IsObjectId)
+  post_id: string;
 }

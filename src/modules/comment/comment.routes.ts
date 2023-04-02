@@ -18,7 +18,7 @@ export class CommentRoutes implements IRoute {
   }
 
   private init() {
-    this.router.post(`/signup`, [
+    this.router.post(`/`, [
       RequestValidator({ validators: CreateCommentValidator, type: VALIDATION_TYPE.REQ_BODY }),
       this.commentController.addComment,
     ]);

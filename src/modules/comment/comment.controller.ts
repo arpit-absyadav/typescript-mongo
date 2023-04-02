@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
+import { PostService } from './../posts/post.service';
+import { UserService } from './../users/user.service';
 import { CommentService } from './comment.service';
 import { error, success } from '../../common/core/handlers';
 import { ICreateComment, IComment } from './interfaces/comment.interface';
 
 export class CommentController {
   private commentService = new CommentService();
+  private userService = new UserService();
+  private postService = new PostService();
 
   public getCommentListCount = async (
     req: Request,
@@ -48,6 +52,9 @@ export class CommentController {
   ): Promise<Response> => {
     try {
       const reqBody: ICreateComment = req.body;
+
+      await this.userService.getOne({ id: reqBody.commented_by });
+      await this.postService.getOne({ id: reqBody.post_id });
 
       const comment: IComment = await this.commentService.createOne({
         ...reqBody,

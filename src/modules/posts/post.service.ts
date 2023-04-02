@@ -2,14 +2,11 @@ import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { Post } from './post.model';
 import { ICreatePost, IPost } from './interfaces/post.interface';
-import { IRequestQuery } from '../../common/core/interfaces';
-interface IGetPost {
-  id: string;
-}
+import { IGetOne, IRequestQuery } from '../../common/core/interfaces';
 
 export class PostService {
-  private privateFields: Record<string, any> = { salt: 0, hash: 0, refresh_token: 0 };
   private deleteCheck: Record<string, any> = { deleted_at: null };
+
   public async getListCount({ status, search }: IRequestQuery | any): Promise<number> {
     const where: Record<string, any> = { ...this.deleteCheck };
 
@@ -57,7 +54,7 @@ export class PostService {
       order[sort_by] = sort_order;
     }
 
-    return Post.find(where, this.privateFields, {
+    return Post.find(where, {
       skip,
       limit,
       sort: {
@@ -69,8 +66,8 @@ export class PostService {
   /**
    * getOne
    */
-  public async getOne({ id }: IGetPost): Promise<IPost> {
-    const item = await Post.findOne({ _id: id, ...this.deleteCheck }, this.privateFields);
+  public async getOne({ id }: IGetOne): Promise<IPost> {
+    const item = await Post.findOne({ _id: id, ...this.deleteCheck });
 
     if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Post not found.');
 

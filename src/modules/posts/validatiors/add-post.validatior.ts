@@ -1,20 +1,14 @@
-import { IsString, IsEnum, IsEmail, IsOptional } from 'class-validator';
-import { GENDER } from '../post.enum';
+import { IsObjectId } from './../../../common/validatiors/object-id.validator';
+import { IsString, Validate } from 'class-validator';
 
 export class CreatePostValidator {
   @IsString()
-  first_name: string;
+  title: string;
 
   @IsString()
-  last_name: string;
-
-  @IsOptional()
-  @IsEnum(GENDER)
-  gender: GENDER = GENDER.MALE;
-
-  @IsEmail()
-  email: string;
+  body: string;
 
   @IsString()
-  password: string;
+  @Validate(IsObjectId)
+  user_id: string;
 }

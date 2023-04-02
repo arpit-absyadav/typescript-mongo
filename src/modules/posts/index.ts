@@ -1,4 +1,4 @@
-import { User } from './post.model';
-import { UserRoutes } from './post.routes';
+import { Post } from './post.model';
+import { PostRoutes } from './post.routes';
 
-export { User, UserRoutes };
+export { Post, PostRoutes };

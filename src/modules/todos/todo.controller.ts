@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
+import { UserService } from './../users/user.service';
 import { TodoService } from './todo.service';
 import { error, success } from '../../common/core/handlers';
 import { ICreateTodo, ITodo } from './interfaces/todo.interface';
 
 export class TodoController {
   private todoService = new TodoService();
+  private userService = new UserService();
 
   public getTodoListCount = async (
     req: Request,
@@ -45,6 +47,7 @@ export class TodoController {
     try {
       const reqBody: ICreateTodo = req.body;
 
+      await this.userService.getOne({ id: reqBody.user_id });
       const todo: ITodo = await this.todoService.createOne({
         ...reqBody,
       });
@@ -57,9 +60,6 @@ export class TodoController {
 
   public getTodo = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
-      console.log('req.params');
-      console.log(req.params);
-
       const { todoId } = req.params;
       const todo = await this.todoService.getOne({
         id: todoId,

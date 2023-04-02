@@ -2,14 +2,11 @@ import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { Todo } from './todo.model';
 import { ICreateTodo, ITodo } from './interfaces/todo.interface';
-import { IRequestQuery } from '../../common/core/interfaces';
-interface IGetTodo {
-  id: string;
-}
+import { IGetOne, IRequestQuery } from '../../common/core/interfaces';
 
 export class TodoService {
-  private privateFields: Record<string, any> = { salt: 0, hash: 0, refresh_token: 0 };
   private deleteCheck: Record<string, any> = { deleted_at: null };
+
   public async getListCount({ status, search }: IRequestQuery | any): Promise<number> {
     const where: Record<string, any> = { ...this.deleteCheck };
 
@@ -57,7 +54,7 @@ export class TodoService {
       order[sort_by] = sort_order;
     }
 
-    return Todo.find(where, this.privateFields, {
+    return Todo.find(where, {
       skip,
       limit,
       sort: {
@@ -69,21 +66,11 @@ export class TodoService {
   /**
    * getOne
    */
-  public async getOne({ id }: IGetTodo): Promise<ITodo> {
-    const item = await Todo.findOne({ _id: id, ...this.deleteCheck }, this.privateFields);
+  public async getOne({ id }: IGetOne): Promise<ITodo> {
+    const item = await Todo.findOne({ _id: id, ...this.deleteCheck });
 
     if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Todo not found.');
 
-    return item;
-  }
-
-  /**
-   * getOne
-   */
-  public async getByEmail({ email }: { email: string }): Promise<ITodo> {
-    const item = await Todo.findOne({ email, ...this.deleteCheck });
-
-    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Todo not found.');
     return item;
   }
 

@@ -18,7 +18,11 @@ const CommentSchema: Schema = new Schema(
       type: String,
       required: true,
     },
-    user_id: {
+    post_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'posts',
+    },
+    commented_by: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users',
     },

@@ -1,4 +1,4 @@
-import { User } from './todo.model';
-import { UserRoutes } from './todo.routes';
+import { Todo } from './todo.model';
+import { TodoRoutes } from './todo.routes';
 
-export { User, UserRoutes };
+export { Todo, TodoRoutes };
