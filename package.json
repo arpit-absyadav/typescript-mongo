@@ -32,6 +32,7 @@
     "express-rate-limit": "^6.7.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
+    "node-cache": "^5.1.2",
     "rate-limiter-flexible": "^2.4.1"
   },
   "devDependencies": {

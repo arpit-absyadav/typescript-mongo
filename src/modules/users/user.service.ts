@@ -3,6 +3,7 @@ import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { User } from './user.model';
 import { ICreateUser, IUser } from './interfaces/user.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
+import { Cache } from '../../common/core/decorators/cache';
 interface IGetUser {
   id: string;
 }
@@ -24,6 +25,7 @@ export class UserService {
     return User.count(where);
   }
 
+  @Cache(10)
   public async getList({
     page_no,
     page_size,
@@ -33,6 +35,8 @@ export class UserService {
     search,
     ids,
   }: IRequestQuery | any): Promise<IUser[]> {
+    console.log('API Called');
+
     const limit = page_size;
     const skip = (page_no - 1) * limit;
 
