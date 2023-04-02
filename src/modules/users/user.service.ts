@@ -1,10 +1,10 @@
+import { ERROR } from './../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { User } from './user.model';
 import { ICreateUser, IUser } from './interfaces/user.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
 interface IGetUser {
-  user_id: number;
-  id: number;
+  id: string;
 }
 
 export class UserService {
@@ -23,7 +23,16 @@ export class UserService {
     return User.count();
   }
 
-  public async getList({ user_id, page_no, page_size, status, sort_by, sort_order, search, ids }: IRequestQuery | any): Promise<IUser[]> {
+  public async getList({
+    user_id,
+    page_no,
+    page_size,
+    status,
+    sort_by,
+    sort_order,
+    search,
+    ids,
+  }: IRequestQuery | any): Promise<IUser[]> {
     const limit = page_size;
     const offset = (page_no - 1) * limit;
 
@@ -53,17 +62,21 @@ export class UserService {
   /**
    * getOne
    */
-  public async getOne({ user_id, id }: IGetUser): Promise<IUser> {
-    const where = {
-      user_id,
-      id,
-    };
+  public async getOne({ id }: IGetUser): Promise<IUser> {
+    const item = await User.findOne({ _id: id }, { salt: 0, hash: 0, refresh_token: 0 });
 
-    const item = await User.findOne({
-      where,
-    });
+    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'User not found.');
 
-    // if (!item) throw new HttpException();
+    return item;
+  }
+
+  /**
+   * getOne
+   */
+  public async getByEmail({ email }: { email: string }): Promise<IUser> {
+    const item = await User.findOne({ email });
+
+    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'User not found.');
     return item;
   }
 

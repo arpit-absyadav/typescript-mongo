@@ -13,7 +13,12 @@ export const config = {
   MONGO_USERNAME: process.env.MONGO_USERNAME || 'root',
   MONGO_PASSWORD: process.env.MONGO_PASSWORD || 'root',
   MONGO_DB_NAME: process.env.MONGO_DB_NAME || 'mongo_db',
+
+  ACCESS_TOKEN_SECRET: process.env.TOKEN_SECRET || 'hjh$HJ',
+  ACCESS_TOKEN_EXP_TIME: process.env.TOKEN_EXP_TIME || '24h',
+  REFRESH_TOKEN_SECRET: process.env.TOKEN_SECRET || 'hjh$HJasdfas',
+  REFRESH_TOKEN_EXP_TIME: process.env.TOKEN_EXP_TIME || '1m',
+  SALT_ROUNDS: process.env.SALT_ROUNDS || 13,
+
   API_VERSION: 'v1',
 };
-
-console.log(config);

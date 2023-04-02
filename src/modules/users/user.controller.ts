@@ -1,11 +1,24 @@
+import { ERROR } from './../../common/core/handlers/consts/error';
+import { HttpException } from './../../common/core/handlers/error/HttpException';
+import { STATUS } from './../../consts/status';
+import { TOKEN_TYPE } from './../../common/core/utils/jwt';
+import { config } from './../../config/index';
 import { NextFunction, Request, Response } from 'express';
+import * as bcrypt from 'bcrypt';
 import { UserService } from './user.service';
 import { error, success } from '../../common/core/handlers';
+import { ITokenPayload } from '../../common/core/utils/jwt';
+import { JWT } from '../../common/core/utils';
+import { ICreateUser, IUser } from './interfaces/user.interface';
 
-export default class UsersController {
+export class UserController {
   private userService = new UserService();
 
-  public getUserListCount = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  public getUserListCount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response> => {
     try {
       const count = await this.userService.getListCount({
         ...req.query,
@@ -16,7 +29,11 @@ export default class UsersController {
     }
   };
 
-  public getUserList = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  public getUserList = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response> => {
     try {
       const reqData = { ...req.query };
       if (reqData.ids) {
@@ -32,28 +49,104 @@ export default class UsersController {
     }
   };
 
+  hashPassword = async ({ password }: { password: string }): Promise<any> => {
+    const salt = await bcrypt.genSaltSync(+config.SALT_ROUNDS);
+    const hash = await bcrypt.hash(password, salt);
+    return { salt, hash };
+  };
+
   public addUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
-      const reqBody = req.body;
-      console.log(reqBody);
-      const validatedReqData = reqBody;
-      console.log('validatedReqData', validatedReqData);
+      const reqBody: ICreateUser = req.body;
 
-      const user = await this.userService.createOne({
-        ...validatedReqData,
+      const hashAndSalt = await this.hashPassword({
+        password: reqBody.password,
       });
-      return success.handler({ user }, req, res, next);
+
+      const payload: ITokenPayload = {
+        email: reqBody.email,
+      };
+
+      const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
+
+      const user: IUser = await this.userService.createOne({
+        ...reqBody,
+        ...hashAndSalt,
+        refresh_token: refreshToken,
+      });
+      const accessToken: string = await JWT.signToken(payload, TOKEN_TYPE.ACCESS);
+
+      delete user.salt;
+      delete user.hash;
+      delete user.refresh_token;
+
+      return success.handler(
+        { user, access_token: accessToken, refresh_token: refreshToken },
+        req,
+        res,
+        next,
+      );
     } catch (err) {
       return error.handler(err, req, res, next);
     }
   };
 
+  private comparePassword = async (password: string, user: IUser) => {
+    const verified = await bcrypt.compare(password, user.hash);
+    if (!verified) {
+      throw new HttpException(ERROR.FORBIDDEN, 'Invalid Credentials');
+    }
+    return true;
+  };
+  private processSignIn = async ({ password, user }: any) => {
+    if (user.status !== STATUS.ENABLED) {
+      throw new HttpException(ERROR.FORBIDDEN, 'User not acctive.');
+    }
+    await this.comparePassword(password, user);
+  };
+
+  public signIn = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    try {
+      const { email, password } = req.body;
+      const user: IUser = await this.userService.getByEmail({
+        email,
+      });
+
+      await this.processSignIn({ password, user });
+
+      const payload: ITokenPayload = {
+        email,
+      };
+
+      const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
+
+      // const user: IUser = await this.userService.up({
+      //   ...reqBody,
+      //   ...hashAndSalt,
+      //   refresh_token: refreshToken,
+      // });
+      const accessToken: string = await JWT.signToken(payload, TOKEN_TYPE.ACCESS);
+
+      delete user.salt;
+      delete user.hash;
+      delete user.refresh_token;
+
+      const userData = await this.userService.getOne({ id: user._id });
+      return success.handler(
+        { user: userData, access_token: accessToken, refresh_token: refreshToken },
+        req,
+        res,
+        next,
+      );
+    } catch (err) {
+      return error.handler(err, req, res, next);
+    }
+  };
   public getUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
       const { userId } = req.params;
       const user = await this.userService.getOne({
-        id: +userId,
-        user_id: 1,
+        id: userId,
       });
       return success.handler({ user }, req, res, next);
     } catch (err) {

@@ -1,3 +1,4 @@
+import { STATUS } from './../../consts/status';
 import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from './interfaces/user.interface';
 
@@ -7,51 +8,39 @@ export interface IUserModel extends IUser, Document {}
 //DEFINE USER SCHEMA
 const UserSchema: Schema = new Schema(
   {
-    firstName: {
+    first_name: {
       type: String,
-      default: '',
+      required: true,
     },
-    lastName: {
+    last_name: {
       type: String,
-      default: '',
+      required: true,
     },
     gender: {
       type: String,
       default: 'male',
-    },
-    dateOfBirth: {
-      type: Date,
-      default: null,
-    },
-    residence: {
-      type: String,
-      default: '',
-    },
-    avatar: {
-      type: String,
-      default: '',
     },
     email: {
       type: String,
       required: true,
       unique: true,
     },
-    password: {
+    hash: {
       type: String,
       required: true,
-      min: 8,
     },
-    role: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Role',
+    salt: {
+      type: String,
+      required: true,
     },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
+    refresh_token: {
+      type: String,
+      required: true,
     },
-    isProfileCompleted: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: Number,
+      required: true,
+      default: STATUS.ENABLED,
     },
   },
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } },

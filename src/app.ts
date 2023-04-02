@@ -26,9 +26,9 @@ export class App {
     /**
      * Initializing Middlewares, Managers and Routes
      */
+    this.initMiddlewares();
     this.initManagers();
     this.initRoutes();
-    this.initMiddlewares();
   }
 
   public getServer(): express.Application {

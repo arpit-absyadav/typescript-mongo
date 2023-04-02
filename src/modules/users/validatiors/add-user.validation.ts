@@ -1,46 +1,20 @@
-import { IsNumber, IsPositive, IsString, IsEnum, IsArray, MinLength, IsOptional } from 'class-validator';
-import { Transform } from 'class-transformer';
-
-enum SortOrder {
-  DESC = 'desc',
-  ASC = 'asc',
-}
+import { IsString, IsEnum, IsEmail, IsOptional } from 'class-validator';
+import { GENDER } from '../user.enum';
 
 export class CreateUserValidator {
-  @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  @Transform((value) => Number(value))
-  page_no = 1;
-
-  @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  @Transform((value) => Number(value))
-  page_size = 10;
-
-  @IsOptional()
   @IsString()
-  @Transform((value) => String(value))
-  sort_by = 'created_at';
+  first_name: string;
 
-  @IsOptional()
-  @IsEnum(SortOrder)
-  @Transform((value) => String(value))
-  sort_order: SortOrder = SortOrder.DESC;
-
-  @IsOptional()
-  @IsNumber()
-  @IsEnum([1, 2, 3, 4])
-  status?: number;
-
-  @IsOptional()
   @IsString()
-  @MinLength(3)
-  search?: string;
+  last_name: string;
 
   @IsOptional()
-  @IsArray()
-  @IsNumber({}, { each: true })
-  ids?: number[];
+  @IsEnum(GENDER)
+  gender: GENDER = GENDER.MALE;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
 }

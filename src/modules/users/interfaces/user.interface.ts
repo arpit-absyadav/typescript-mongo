@@ -1,27 +1,21 @@
 export interface IUser {
-  firstName: string;
-  lastName: string;
+  _id?: string;
+  first_name: string;
+  last_name: string;
   gender: string;
-  dateOfBirth: Date;
-  residence: string;
-  avatar: string;
   email: string;
-  password: string;
-  role: any;
-  isEmailVerified: boolean;
-  isProfileCompleted: boolean;
+  salt: string;
+  hash: string;
+  refresh_token?: string;
+  status: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface ICreateUser {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   gender: string;
-  dateOfBirth: Date;
-  residence: string;
-  avatar: string;
   email: string;
-  password: string;
-  role: any;
-  isEmailVerified: boolean;
-  isProfileCompleted: boolean;
+  password?: string;
 }

@@ -1,4 +1,3 @@
-import { RESPONSE_CODE } from './../handlers/consts/response-code';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
@@ -30,6 +29,7 @@ export const RequestValidator = (
 ) => {
   return (req: Request, res: Response, next: NextFunction): any => {
     const data = req[type];
+
     const dto = plainToInstance(validators, data);
     validateOrReject(dto, { skipMissingProperties, whitelist, forbidNonWhitelisted })
       .then(() => {
@@ -42,7 +42,11 @@ export const RequestValidator = (
         console.log(FirstError);
         console.log(firstKey);
 
-        const err: any = new HttpException(ERROR.VALIDATION_ERROR, FirstError.constraints[firstKey], [...Object.values(FirstError.constraints)]);
+        const err: any = new HttpException(
+          ERROR.VALIDATION_ERROR,
+          FirstError.constraints[firstKey],
+          [...Object.values(FirstError.constraints)],
+        );
 
         error.handler(err, req, res, next);
         // next(new Error(message));
