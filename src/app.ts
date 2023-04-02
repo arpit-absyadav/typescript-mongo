@@ -1,8 +1,8 @@
-import { IRoute } from '@abslibs/core/dist/interfaces';
 import * as express from 'express';
 import { InitializeRoutes } from './common/routes/index';
 import { MongooseManager } from './common/managers/mongoose.manager';
 import { error, success } from './common/core/handlers';
+import { IRoute } from './common/core/interfaces';
 
 export class App {
   public app: express.Application;

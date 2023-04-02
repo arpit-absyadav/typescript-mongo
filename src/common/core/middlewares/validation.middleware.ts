@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import { error } from '../handlers';
 import { ERROR } from '../handlers/consts';
-import HttpException from '../handlers/error/HttpException';
+import { HttpException } from '../handlers/error/HttpException';
 
 export enum VALIDATION_TYPE {
   REQ_BODY = 'body',
@@ -42,9 +42,7 @@ export const RequestValidator = (
         console.log(FirstError);
         console.log(firstKey);
 
-        const err: any = new HttpException(ERROR.VALIDATION_ERROR, FirstError.constraints[firstKey], RESPONSE_CODE.BAD_REQUEST, [
-          ...Object.values(FirstError.constraints),
-        ]);
+        const err: any = new HttpException(ERROR.VALIDATION_ERROR, FirstError.constraints[firstKey], [...Object.values(FirstError.constraints)]);
 
         error.handler(err, req, res, next);
         // next(new Error(message));

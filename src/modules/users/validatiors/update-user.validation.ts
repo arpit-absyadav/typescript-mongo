@@ -1,8 +1,46 @@
-import * as Joi from 'joi';
-import validations from '@abslibs/core/dist/validations';
+import { IsNumber, IsPositive, IsString, IsEnum, IsArray, MinLength, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
-export default Joi.object().keys({
-  name: validations.name.label('Name'),
-  description: validations.description.label('Description'),
-  enable: validations.enable.label('Enable'),
-});
+enum SortOrder {
+  DESC = 'desc',
+  ASC = 'asc',
+}
+
+export class UpdateUserValidator {
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Transform((value) => Number(value))
+  page_no = 1;
+
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Transform((value) => Number(value))
+  page_size = 10;
+
+  @IsOptional()
+  @IsString()
+  @Transform((value) => String(value))
+  sort_by = 'created_at';
+
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Transform((value) => String(value))
+  sort_order: SortOrder = SortOrder.DESC;
+
+  @IsOptional()
+  @IsNumber()
+  @IsEnum([1, 2, 3, 4])
+  status?: number;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(3)
+  search?: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsNumber({}, { each: true })
+  ids?: number[];
+}

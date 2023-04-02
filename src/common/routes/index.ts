@@ -1,7 +1,7 @@
-import { Application } from 'express';
+import { error } from '../../common/core/handlers';
+import { Application, NextFunction, Request, Response } from 'express';
 import { UserRoutes } from '../../modules/users/user.routes';
 import { IndexRoutes } from './index.routes';
-import { error } from '@abslibs/core/dist/handlers';
 
 export class InitializeRoutes {
   private indexRoutes = new IndexRoutes();
@@ -12,8 +12,9 @@ export class InitializeRoutes {
     app.use('/users', [this.userRoutes.router]);
 
     // Setting up default 404 for missing routes.
-    app.use('*', (req, res) => {
-      return error.routeNotFound('', res);
+    app.use('*', (err: any, req: Request, res: Response, next: NextFunction) => {
+      console.log('asdafadsf', err);
+      return error.handler(err, req, res, next);
     });
   }
 }

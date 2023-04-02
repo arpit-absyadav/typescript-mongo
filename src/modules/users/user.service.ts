@@ -1,7 +1,7 @@
+import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { User } from './user.model';
-import { error } from '@abslibs/core/dist/handlers';
 import { ICreateUser, IUser } from './interfaces/user.interface';
-import { IRequestQuery } from 'common/core/interfaces';
+import { IRequestQuery } from '../../common/core/interfaces';
 interface IGetUser {
   user_id: number;
   id: number;
@@ -63,7 +63,7 @@ export class UserService {
       where,
     });
 
-    if (!item) return error.throwNotFound({ item: 'User' });
+    // if (!item) throw new HttpException();
     return item;
   }
 
