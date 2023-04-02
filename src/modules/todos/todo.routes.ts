@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { UserController } from './todo.controller';
+import { TodoController } from './todo.controller';
 import { IRoute } from 'common/core/interfaces';
 import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validatiors';
-import { CreateUserValidator } from './validatiors';
+import { CreateTodoValidator } from './validatiors';
 
-export class UserRoutes implements IRoute {
+export class TodoRoutes implements IRoute {
   public router = Router();
   path: '/todo';
-  private userController = new UserController();
+  private userController = new TodoController();
 
   constructor() {
     this.init();
@@ -19,8 +19,8 @@ export class UserRoutes implements IRoute {
 
   private init() {
     this.router.post(`/`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.addUser,
+      RequestValidator({ validators: CreateTodoValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      this.userController.addTodo,
     ]);
 
     this.router.get(`/count`, [
@@ -29,7 +29,7 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserListCount,
+      this.userController.getTodoListCount,
     ]);
     this.router.get(`/`, [
       RequestValidator({
@@ -37,7 +37,7 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserList,
+      this.userController.getTodoList,
     ]);
     this.router.get(`/:todoId`, [
       RequestValidator({
@@ -45,9 +45,9 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_PARAMS,
         paramName: 'todoId',
       }),
-      this.userController.getUser,
+      this.userController.getTodo,
     ]);
-    this.router.put(`/:todoId`, this.userController.updateUser);
-    this.router.delete(`/:todoId`, this.userController.deleteUser);
+    this.router.put(`/:todoId`, this.userController.updateTodo);
+    this.router.delete(`/:todoId`, this.userController.deleteTodo);
   }
 }

@@ -1,15 +1,13 @@
 import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
-import { Post } from './post.model';
-import { ICreatePost, IPost } from './interfaces/post.interface';
+import { Comment } from './comment.model';
+import { ICreateComment, IComment } from './interfaces/comment.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
-interface IGetPost {
-  id: string;
-}
+import { IGetOne } from '../../common/core/interfaces';
 
-export class PostService {
-  private privateFields: Record<string, any> = { salt: 0, hash: 0, refresh_token: 0 };
+export class CommentService {
   private deleteCheck: Record<string, any> = { deleted_at: null };
+
   public async getListCount({ status, search }: IRequestQuery | any): Promise<number> {
     const where: Record<string, any> = { ...this.deleteCheck };
 
@@ -21,7 +19,7 @@ export class PostService {
       where.email = { $regex: search };
     }
 
-    return Post.count(where);
+    return Comment.count(where);
   }
 
   public async getList({
@@ -32,7 +30,7 @@ export class PostService {
     sort_order,
     search,
     ids,
-  }: IRequestQuery | any): Promise<IPost[]> {
+  }: IRequestQuery | any): Promise<IComment[]> {
     const limit = page_size;
     const skip = (page_no - 1) * limit;
 
@@ -57,7 +55,7 @@ export class PostService {
       order[sort_by] = sort_order;
     }
 
-    return Post.find(where, this.privateFields, {
+    return Comment.find(where, {
       skip,
       limit,
       sort: {
@@ -69,36 +67,36 @@ export class PostService {
   /**
    * getOne
    */
-  public async getOne({ id }: IGetPost): Promise<IPost> {
-    const item = await Post.findOne({ _id: id, ...this.deleteCheck }, this.privateFields);
+  public async getOne({ id }: IGetOne): Promise<IComment> {
+    const item = await Comment.findOne({ _id: id, ...this.deleteCheck });
 
-    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Post not found.');
+    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Comment not found.');
 
     return item;
   }
 
   /**
-   * NOTE: Must return with two type. one with <Post> and second with <any>
+   * NOTE: Must return with two type. one with <Comment> and second with <any>
    * @param param0
    */
-  public async createOne(data: ICreatePost): Promise<IPost> {
-    return Post.create(data);
+  public async createOne(data: ICreateComment): Promise<IComment> {
+    return Comment.create(data);
   }
 
-  public async updateOne(id: string, data: Record<string, any>): Promise<IPost> {
-    const updatedData = await Post.updateOne({ _id: id }, data);
+  public async updateOne(id: string, data: Record<string, any>): Promise<IComment> {
+    const updatedData = await Comment.updateOne({ _id: id }, data);
     if (updatedData.modifiedCount > 0) {
       return this.getOne({ id });
     }
-    throw new HttpException(ERROR.PRECONDITION_FAILED, 'Could not update post data.');
+    throw new HttpException(ERROR.PRECONDITION_FAILED, 'Could not update comment data.');
   }
 
   public async deleteOne(id: string): Promise<Record<string, any>> {
-    const updatedData = await Post.updateOne({ _id: id }, { deleted_at: new Date() });
+    const updatedData = await Comment.updateOne({ _id: id }, { deleted_at: new Date() });
 
     if (!updatedData.modifiedCount) {
-      throw new HttpException(ERROR.PRECONDITION_FAILED, 'Could not delete post.');
+      throw new HttpException(ERROR.PRECONDITION_FAILED, 'Could not delete comment.');
     }
-    return { message: 'Post Deleted Successfully' };
+    return { message: 'Comment Deleted Successfully' };
   }
 }

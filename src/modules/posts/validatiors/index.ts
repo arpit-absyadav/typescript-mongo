@@ -1,4 +1,4 @@
-import { UpdateUserValidator } from './update-post.validation';
-import { CreateUserValidator } from './add-post.validation';
+import { UpdatePostValidator } from './update-post.validatior';
+import { CreatePostValidator } from './add-post.validatior';
 
-export { CreateUserValidator, UpdateUserValidator };
+export { CreatePostValidator, UpdatePostValidator };

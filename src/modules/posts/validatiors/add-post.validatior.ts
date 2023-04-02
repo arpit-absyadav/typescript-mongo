@@ -1,7 +1,7 @@
 import { IsString, IsEnum, IsEmail, IsOptional } from 'class-validator';
-import { GENDER } from '../comment.enum';
+import { GENDER } from '../post.enum';
 
-export class CreateUserValidator {
+export class CreatePostValidator {
   @IsString()
   first_name: string;
 

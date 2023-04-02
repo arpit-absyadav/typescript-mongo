@@ -1,26 +1,18 @@
-import { ERROR } from '../../common/core/handlers/consts/error';
-import { HttpException } from '../../common/core/handlers/error/HttpException';
-import { STATUS } from '../../consts/status';
-import { TOKEN_TYPE } from '../../common/core/utils/jwt';
-import { config } from '../../config/index';
 import { NextFunction, Request, Response } from 'express';
-import * as bcrypt from 'bcrypt';
-import { UserService } from './todo.service';
+import { TodoService } from './todo.service';
 import { error, success } from '../../common/core/handlers';
-import { ITokenPayload } from '../../common/core/utils/jwt';
-import { JWT } from '../../common/core/utils';
-import { ICreateUser, IUser } from './interfaces/todo.interface';
+import { ICreateTodo, ITodo } from './interfaces/todo.interface';
 
-export class UserController {
-  private userService = new UserService();
+export class TodoController {
+  private todoService = new TodoService();
 
-  public getUserListCount = async (
+  public getTodoListCount = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response> => {
     try {
-      const count = await this.userService.getListCount({
+      const count = await this.todoService.getListCount({
         ...req.query,
       });
       return success.handler({ count }, req, res, next);
@@ -29,7 +21,7 @@ export class UserController {
     }
   };
 
-  public getUserList = async (
+  public getTodoList = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -40,144 +32,71 @@ export class UserController {
       if (reqData.ids) {
         reqData.ids = (reqData.ids as string).split(';');
       }
-      const users = await this.userService.getList({
+      const todos = await this.todoService.getList({
         ...reqData,
       });
-      return success.handler({ users }, req, res, next);
+      return success.handler({ todos }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);
     }
   };
 
-  hashPassword = async ({ password }: { password: string }): Promise<any> => {
-    const salt = await bcrypt.genSaltSync(+config.SALT_ROUNDS);
-    const hash = await bcrypt.hash(password, salt);
-    return { salt, hash };
-  };
-
-  public addUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  public addTodo = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
-      const reqBody: ICreateUser = req.body;
+      const reqBody: ICreateTodo = req.body;
 
-      const hashAndSalt = await this.hashPassword({
-        password: reqBody.password,
-      });
-
-      const payload: ITokenPayload = {
-        email: reqBody.email,
-      };
-
-      const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
-
-      const user: IUser = await this.userService.createOne({
+      const todo: ITodo = await this.todoService.createOne({
         ...reqBody,
-        ...hashAndSalt,
-        refresh_token: refreshToken,
       });
-      const accessToken: string = await JWT.signToken(payload, TOKEN_TYPE.ACCESS);
 
-      delete user.salt;
-      delete user.hash;
-      delete user.refresh_token;
-
-      return success.handler(
-        { user, access_token: accessToken, refresh_token: refreshToken },
-        req,
-        res,
-        next,
-      );
+      return success.handler({ todo }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);
     }
   };
 
-  private comparePassword = async (password: string, user: IUser) => {
-    const verified = await bcrypt.compare(password, user.hash);
-    if (!verified) {
-      throw new HttpException(ERROR.FORBIDDEN, 'Invalid Credentials');
-    }
-    return true;
-  };
-  private processSignIn = async ({ password, user }: any) => {
-    if (user.status !== STATUS.ENABLED) {
-      throw new HttpException(ERROR.FORBIDDEN, 'User not acctive.');
-    }
-    await this.comparePassword(password, user);
-  };
-
-  public signIn = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-    try {
-      const { email, password } = req.body;
-      const user: IUser = await this.userService.getByEmail({
-        email,
-      });
-
-      await this.processSignIn({ password, user });
-
-      const payload: ITokenPayload = {
-        email,
-      };
-
-      const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
-
-      // update the refresh token
-      await this.userService.updateOne(user._id, { refresh_toke: refreshToken });
-
-      const accessToken: string = await JWT.signToken(payload, TOKEN_TYPE.ACCESS);
-
-      const userData = await this.userService.getOne({ id: user._id });
-      return success.handler(
-        { user: userData, access_token: accessToken, refresh_token: refreshToken },
-        req,
-        res,
-        next,
-      );
-    } catch (err) {
-      return error.handler(err, req, res, next);
-    }
-  };
-  public getUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  public getTodo = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
       console.log('req.params');
       console.log(req.params);
 
-      const { userId } = req.params;
-      const user = await this.userService.getOne({
-        id: userId,
+      const { todoId } = req.params;
+      const todo = await this.todoService.getOne({
+        id: todoId,
       });
-      return success.handler({ user }, req, res, next);
+      return success.handler({ todo }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);
     }
   };
 
-  public updateUser = async (
+  public updateTodo = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response> => {
-    const { userId } = req.params;
+    const { todoId } = req.params;
     const reqBody = req.body;
     try {
-      await this.userService.getOne({ id: userId });
-      const user = await this.userService.updateOne(userId, reqBody);
-      return success.handler({ user }, req, res, next);
+      await this.todoService.getOne({ id: todoId });
+      const todo = await this.todoService.updateOne(todoId, reqBody);
+      return success.handler({ todo }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);
     }
   };
 
-  public deleteUser = async (
+  public deleteTodo = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response> => {
-    const { userId } = req.params;
+    const { todoId } = req.params;
     try {
-      await this.userService.getOne({ id: userId });
-      const user = await this.userService.deleteOne(userId);
+      await this.todoService.getOne({ id: todoId });
+      const todo = await this.todoService.deleteOne(todoId);
 
-      return success.handler({ user }, req, res, next);
+      return success.handler({ todo }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);
     }

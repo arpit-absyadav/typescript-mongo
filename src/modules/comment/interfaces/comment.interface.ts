@@ -1,6 +1,7 @@
-export interface IPost {
+export interface IComment {
   _id?: string;
-  user_id: string;
+  commented_by: string;
+  post_id: string;
   title: string;
   body: string;
   status: number;
@@ -9,8 +10,9 @@ export interface IPost {
   deleted_at: Date;
 }
 
-export interface ICreatePost {
-  user_id: string;
+export interface ICreateComment {
+  commented_by: string;
+  post_id: string;
   title: string;
   body: string;
 }

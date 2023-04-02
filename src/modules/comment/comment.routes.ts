@@ -1,17 +1,17 @@
 import { Router } from 'express';
-import { UserController } from './comment.controller';
+import { CommentController } from './comment.controller';
 import { IRoute } from 'common/core/interfaces';
 import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validatiors';
-import { CreateUserValidator } from './validatiors';
+import { CreateCommentValidator } from './validatiors';
 
-export class UserRoutes implements IRoute {
+export class CommentRoutes implements IRoute {
   public router = Router();
-  path: '/users';
-  private userController = new UserController();
+  path: '/comments';
+  private commentController = new CommentController();
 
   constructor() {
     this.init();
@@ -19,12 +19,8 @@ export class UserRoutes implements IRoute {
 
   private init() {
     this.router.post(`/signup`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.addUser,
-    ]);
-    this.router.post(`/signin`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.signIn,
+      RequestValidator({ validators: CreateCommentValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      this.commentController.addComment,
     ]);
 
     this.router.get(`/count`, [
@@ -33,7 +29,7 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserListCount,
+      this.commentController.getCommentListCount,
     ]);
     this.router.get(`/`, [
       RequestValidator({
@@ -41,17 +37,17 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserList,
+      this.commentController.getCommentList,
     ]);
-    this.router.get(`/:userId`, [
+    this.router.get(`/:commentId`, [
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
+        paramName: 'commentId',
       }),
-      this.userController.getUser,
+      this.commentController.getComment,
     ]);
-    this.router.put(`/:userId`, this.userController.updateUser);
-    this.router.delete(`/:userId`, this.userController.deleteUser);
+    this.router.put(`/:commentId`, this.commentController.updateComment);
+    this.router.delete(`/:commentId`, this.commentController.deleteComment);
   }
 }

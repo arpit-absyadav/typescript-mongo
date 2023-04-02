@@ -1,30 +1,26 @@
 import { Router } from 'express';
-import { UserController } from './post.controller';
+import { PostController } from './post.controller';
 import { IRoute } from 'common/core/interfaces';
 import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validatiors';
-import { CreateUserValidator } from './validatiors';
+import { CreatePostValidator } from './validatiors';
 
-export class UserRoutes implements IRoute {
+export class PostRoutes implements IRoute {
   public router = Router();
-  path: '/users';
-  private userController = new UserController();
+  path: '/posts';
+  private postController = new PostController();
 
   constructor() {
     this.init();
   }
 
   private init() {
-    this.router.post(`/signup`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.addUser,
-    ]);
-    this.router.post(`/signin`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.signIn,
+    this.router.post(`/`, [
+      RequestValidator({ validators: CreatePostValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      this.postController.addPost,
     ]);
 
     this.router.get(`/count`, [
@@ -33,7 +29,7 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserListCount,
+      this.postController.getPostListCount,
     ]);
     this.router.get(`/`, [
       RequestValidator({
@@ -41,17 +37,17 @@ export class UserRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getUserList,
+      this.postController.getPostList,
     ]);
-    this.router.get(`/:userId`, [
+    this.router.get(`/:postId`, [
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,
-        paramName: 'userId',
+        paramName: 'postId',
       }),
-      this.userController.getUser,
+      this.postController.getPost,
     ]);
-    this.router.put(`/:userId`, this.userController.updateUser);
-    this.router.delete(`/:userId`, this.userController.deleteUser);
+    this.router.put(`/:postId`, this.postController.updatePost);
+    this.router.delete(`/:postId`, this.postController.deletePost);
   }
 }

@@ -1,13 +1,13 @@
 import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
-import { User } from './todo.model';
-import { ICreateUser, IUser } from './interfaces/todo.interface';
+import { Todo } from './todo.model';
+import { ICreateTodo, ITodo } from './interfaces/todo.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
-interface IGetUser {
+interface IGetTodo {
   id: string;
 }
 
-export class UserService {
+export class TodoService {
   private privateFields: Record<string, any> = { salt: 0, hash: 0, refresh_token: 0 };
   private deleteCheck: Record<string, any> = { deleted_at: null };
   public async getListCount({ status, search }: IRequestQuery | any): Promise<number> {
@@ -21,7 +21,7 @@ export class UserService {
       where.email = { $regex: search };
     }
 
-    return User.count(where);
+    return Todo.count(where);
   }
 
   public async getList({
@@ -32,7 +32,7 @@ export class UserService {
     sort_order,
     search,
     ids,
-  }: IRequestQuery | any): Promise<IUser[]> {
+  }: IRequestQuery | any): Promise<ITodo[]> {
     const limit = page_size;
     const skip = (page_no - 1) * limit;
 
@@ -57,7 +57,7 @@ export class UserService {
       order[sort_by] = sort_order;
     }
 
-    return User.find(where, this.privateFields, {
+    return Todo.find(where, this.privateFields, {
       skip,
       limit,
       sort: {
@@ -69,10 +69,10 @@ export class UserService {
   /**
    * getOne
    */
-  public async getOne({ id }: IGetUser): Promise<IUser> {
-    const item = await User.findOne({ _id: id, ...this.deleteCheck }, this.privateFields);
+  public async getOne({ id }: IGetTodo): Promise<ITodo> {
+    const item = await Todo.findOne({ _id: id, ...this.deleteCheck }, this.privateFields);
 
-    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'User not found.');
+    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Todo not found.');
 
     return item;
   }
@@ -80,23 +80,23 @@ export class UserService {
   /**
    * getOne
    */
-  public async getByEmail({ email }: { email: string }): Promise<IUser> {
-    const item = await User.findOne({ email, ...this.deleteCheck });
+  public async getByEmail({ email }: { email: string }): Promise<ITodo> {
+    const item = await Todo.findOne({ email, ...this.deleteCheck });
 
-    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'User not found.');
+    if (!item) throw new HttpException(ERROR.NOT_FOUND, 'Todo not found.');
     return item;
   }
 
   /**
-   * NOTE: Must return with two type. one with <User> and second with <any>
+   * NOTE: Must return with two type. one with <Todo> and second with <any>
    * @param param0
    */
-  public async createOne(data: ICreateUser): Promise<IUser> {
-    return User.create(data);
+  public async createOne(data: ICreateTodo): Promise<ITodo> {
+    return Todo.create(data);
   }
 
-  public async updateOne(id: string, data: Record<string, any>): Promise<IUser> {
-    const updatedData = await User.updateOne({ _id: id }, data);
+  public async updateOne(id: string, data: Record<string, any>): Promise<ITodo> {
+    const updatedData = await Todo.updateOne({ _id: id }, data);
     if (updatedData.modifiedCount > 0) {
       return this.getOne({ id });
     }
@@ -104,11 +104,11 @@ export class UserService {
   }
 
   public async deleteOne(id: string): Promise<Record<string, any>> {
-    const updatedData = await User.updateOne({ _id: id }, { deleted_at: new Date() });
+    const updatedData = await Todo.updateOne({ _id: id }, { deleted_at: new Date() });
 
     if (!updatedData.modifiedCount) {
       throw new HttpException(ERROR.PRECONDITION_FAILED, 'Could not delete user.');
     }
-    return { message: 'User Deleted Successfully' };
+    return { message: 'Todo Deleted Successfully' };
   }
 }

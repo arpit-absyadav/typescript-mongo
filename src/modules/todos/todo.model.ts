@@ -8,7 +8,7 @@ export interface ITodoModel extends ITodo, Document {
 }
 
 //DEFINE USER SCHEMA
-const UserSchema: Schema = new Schema(
+const TodoSchema: Schema = new Schema(
   {
     todo: {
       type: String,
@@ -32,4 +32,4 @@ const UserSchema: Schema = new Schema(
 );
 
 //EXPORT
-export const User = mongoose.model<ITodoModel>('User', UserSchema);
+export const Todo = mongoose.model<ITodoModel>('Todo', TodoSchema);

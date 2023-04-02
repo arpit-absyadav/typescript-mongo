@@ -1,14 +1,14 @@
 import { STATUS } from '../../consts/status';
 import mongoose, { Document, Schema } from 'mongoose';
-import { IPost } from './interfaces/post.interface';
+import { IComment } from './interfaces/comment.interface';
 
 //EXPORT INTERFACE WITH MONGOOSE DOCUMENT
-export interface IPostModel extends IPost, Document {
+export interface ICommentModel extends IComment, Document {
   _id: string;
 }
 
 //DEFINE USER SCHEMA
-const PostSchema: Schema = new Schema(
+const CommentSchema: Schema = new Schema(
   {
     title: {
       type: String,
@@ -36,4 +36,4 @@ const PostSchema: Schema = new Schema(
 );
 
 //EXPORT
-export const Post = mongoose.model<IPostModel>('Post', PostSchema);
+export const Comment = mongoose.model<ICommentModel>('Comment', CommentSchema);
