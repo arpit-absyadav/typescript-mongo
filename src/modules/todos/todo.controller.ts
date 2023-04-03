@@ -30,6 +30,7 @@ export class TodoController {
   ): Promise<Response> => {
     try {
       const reqData = { ...req.query };
+      console.log(reqData);
 
       if (reqData.ids) {
         reqData.ids = (reqData.ids as string).split(';');
