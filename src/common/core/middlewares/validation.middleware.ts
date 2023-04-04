@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express';
 import { error } from '../handlers';
 import { ERROR } from '../handlers/consts';
 import { HttpException } from '../handlers/error/HttpException';
-import { IdValidator } from '../../validatiors/id.validator';
+import { IdValidator } from '../../validators/id.validator';
 
 export enum VALIDATION_TYPE {
   REQ_BODY = 'body',

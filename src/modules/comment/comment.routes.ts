@@ -5,7 +5,7 @@ import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
-import { IdValidator, ListValidator } from '../../common/validatiors';
+import { IdValidator, ListValidator } from '../../common/validators';
 import { CreateCommentValidator } from './validatiors';
 
 export class CommentRoutes implements IRoute {
