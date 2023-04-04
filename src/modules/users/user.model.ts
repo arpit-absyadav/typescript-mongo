@@ -22,6 +22,10 @@ const UserSchema: Schema = new Schema(
       type: String,
       default: 'male',
     },
+    role: {
+      type: String,
+      default: 'user',
+    },
     email: {
       type: String,
       required: true,
