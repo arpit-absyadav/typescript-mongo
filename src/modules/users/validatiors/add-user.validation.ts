@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsEmail, IsOptional } from 'class-validator';
-import { GENDER } from '../user.enum';
+import { GENDER, ROLE } from '../user.enum';
 
 export class CreateUserValidator {
   @IsString()
@@ -11,6 +11,10 @@ export class CreateUserValidator {
   @IsOptional()
   @IsEnum(GENDER)
   gender: GENDER = GENDER.MALE;
+
+  @IsOptional()
+  @IsEnum(ROLE)
+  role: ROLE = ROLE.USER;
 
   @IsEmail()
   email: string;

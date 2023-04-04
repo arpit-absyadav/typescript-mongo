@@ -7,9 +7,11 @@ import {
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validators';
-import { CreateUserValidator } from './validatiors';
+import { CreateUserValidator, SignInUserValidator } from './validatiors';
 import RateLimitor from '../../common/core/middlewares/rate-limiter';
 import permit from '../../common/core/utils/permit';
+import { ROLE } from './user.enum';
+import { TOKEN_TYPE, auth } from '../../common/core/utils/jwt';
 
 export class UserRoutes implements IRoute {
   public router = Router();
@@ -26,12 +28,13 @@ export class UserRoutes implements IRoute {
       this.userController.addUser,
     ]);
     this.router.post(`/signin`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      RequestValidator({ validators: SignInUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
       this.userController.signIn,
     ]);
 
     this.router.get(`/count`, [
-      permit([RoleType.ADMIN, RoleType.USER]),
+      auth(TOKEN_TYPE.ACCESS),
+      permit([ROLE.ADMIN]),
       RequestValidator({
         validators: ListValidator,
         type: VALIDATION_TYPE.REQ_QUERY,
@@ -40,6 +43,8 @@ export class UserRoutes implements IRoute {
       this.userController.getUserListCount,
     ]);
     this.router.get(`/`, [
+      auth(TOKEN_TYPE.ACCESS),
+      permit([ROLE.ADMIN]),
       RateLimitor({
         points: 10, // 10 Requests
         duration: 10, // 10 Seconds
@@ -53,6 +58,8 @@ export class UserRoutes implements IRoute {
       this.userController.getUserList,
     ]);
     this.router.get(`/:userId`, [
+      auth(TOKEN_TYPE.ACCESS),
+      permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,
@@ -61,6 +68,8 @@ export class UserRoutes implements IRoute {
       this.userController.getUser,
     ]);
     this.router.put(`/:userId`, [
+      auth(TOKEN_TYPE.ACCESS),
+      permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,
@@ -73,6 +82,8 @@ export class UserRoutes implements IRoute {
       this.userController.updateUser,
     ]);
     this.router.delete(`/:userId`, [
+      auth(TOKEN_TYPE.ACCESS),
+      permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
         type: VALIDATION_TYPE.REQ_PARAMS,

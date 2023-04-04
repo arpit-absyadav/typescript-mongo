@@ -24,20 +24,32 @@ export class TodoController {
   };
 
   public getTodoList = async (
-    req: Request,
+    req: Request | any,
     res: Response,
     next: NextFunction,
   ): Promise<Response> => {
     try {
       const reqData = { ...req.query };
-      console.log(reqData);
+      console.log('palyload', req.user);
+
+      let condition = {};
+      if (reqData.others) {
+        condition = {
+          user_id: { $ne: req.user._id },
+        };
+      }
+
+      console.log(condition);
 
       if (reqData.ids) {
         reqData.ids = (reqData.ids as string).split(';');
       }
-      const todos = await this.todoService.getList({
-        ...reqData,
-      });
+      const todos = await this.todoService.getList(
+        {
+          ...reqData,
+        },
+        condition,
+      );
       return success.handler({ todos }, req, res, next);
     } catch (err) {
       return error.handler(err, req, res, next);

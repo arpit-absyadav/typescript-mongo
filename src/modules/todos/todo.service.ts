@@ -2,7 +2,7 @@ import { ERROR } from '../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { Todo } from './todo.model';
 import { ICreateTodo, ITodo } from './interfaces/todo.interface';
-import { IGetOne, IRequestQuery } from '../../common/core/interfaces';
+import { IExtraQuery, IGetOne, IRequestQuery } from '../../common/core/interfaces';
 
 export class TodoService {
   private deleteCheck: Record<string, any> = { deleted_at: null };
@@ -21,19 +21,14 @@ export class TodoService {
     return Todo.count(where);
   }
 
-  public async getList({
-    page_no,
-    page_size,
-    status,
-    sort_by,
-    sort_order,
-    search,
-    ids,
-  }: IRequestQuery | any): Promise<ITodo[]> {
+  public async getList(
+    { page_no, page_size, status, sort_by, sort_order, search, ids }: IRequestQuery,
+    condition: IExtraQuery = {},
+  ): Promise<ITodo[]> {
     const limit = page_size;
     const skip = (page_no - 1) * limit;
 
-    const where: Record<string, any> = { ...this.deleteCheck };
+    const where: Record<string, any> = { ...this.deleteCheck, ...condition };
     const order: Record<string, any> = {};
 
     if (status) {
