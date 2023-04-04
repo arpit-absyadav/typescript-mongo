@@ -5,8 +5,8 @@ import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
-import { IdValidator, ListValidator } from '../../common/validatiors';
-import { CreateTodoValidator } from './validatiors';
+import { IdValidator, ListValidator } from '../../common/validators';
+import { CreateTodoValidator } from './validators';
 
 export class TodoRoutes implements IRoute {
   public router = Router();

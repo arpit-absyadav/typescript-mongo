@@ -1,4 +1,4 @@
-import { IsObjectId } from '../../../common/validatiors/object-id.validator';
+import { IsObjectId } from '../../../common/validators/object-id.validator';
 import { IsString, Validate } from 'class-validator';
 
 export class CreateTodoValidator {

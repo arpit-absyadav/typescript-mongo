@@ -5,8 +5,8 @@ import {
   RequestValidator,
   VALIDATION_TYPE,
 } from '../../common/core/middlewares/validation.middleware';
-import { IdValidator, ListValidator } from '../../common/validatiors';
-import { CreatePostValidator } from './validatiors';
+import { IdValidator, ListValidator } from '../../common/validators';
+import { CreatePostValidator } from './validators';
 
 export class PostRoutes implements IRoute {
   public router = Router();
