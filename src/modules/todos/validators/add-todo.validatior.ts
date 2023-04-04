@@ -7,5 +7,5 @@ export class CreateTodoValidator {
 
   @IsString()
   @Validate(IsObjectId)
-  id: string;
+  user_id: string;
 }

@@ -54,7 +54,7 @@ export class TodoService {
       order[sort_by] = sort_order;
     }
 
-    return Todo.find(where, {
+    return Todo.find(where, null, {
       skip,
       limit,
       sort: {

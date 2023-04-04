@@ -11,7 +11,7 @@ import { CreateTodoValidator } from './validators';
 export class TodoRoutes implements IRoute {
   public router = Router();
   path: '/todo';
-  private userController = new TodoController();
+  private todoController = new TodoController();
 
   constructor() {
     this.init();
@@ -20,7 +20,7 @@ export class TodoRoutes implements IRoute {
   private init() {
     this.router.post(`/`, [
       RequestValidator({ validators: CreateTodoValidator, type: VALIDATION_TYPE.REQ_BODY }),
-      this.userController.addTodo,
+      this.todoController.addTodo,
     ]);
 
     this.router.get(`/count`, [
@@ -29,7 +29,7 @@ export class TodoRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getTodoListCount,
+      this.todoController.getTodoListCount,
     ]);
     this.router.get(`/`, [
       RequestValidator({
@@ -37,7 +37,7 @@ export class TodoRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_QUERY,
         skipMissingProperties: true,
       }),
-      this.userController.getTodoList,
+      this.todoController.getTodoList,
     ]);
     this.router.get(`/:todoId`, [
       RequestValidator({
@@ -45,9 +45,9 @@ export class TodoRoutes implements IRoute {
         type: VALIDATION_TYPE.REQ_PARAMS,
         paramName: 'todoId',
       }),
-      this.userController.getTodo,
+      this.todoController.getTodo,
     ]);
-    this.router.put(`/:todoId`, this.userController.updateTodo);
-    this.router.delete(`/:todoId`, this.userController.deleteTodo);
+    this.router.put(`/:todoId`, this.todoController.updateTodo);
+    this.router.delete(`/:todoId`, this.todoController.deleteTodo);
   }
 }
