@@ -9,6 +9,7 @@ import {
 import { IdValidator, ListValidator } from '../../common/validatiors';
 import { CreateUserValidator } from './validatiors';
 import RateLimitor from '../../common/core/middlewares/rate-limiter';
+import permit from '../../common/core/utils/permit';
 
 export class UserRoutes implements IRoute {
   public router = Router();
@@ -30,6 +31,7 @@ export class UserRoutes implements IRoute {
     ]);
 
     this.router.get(`/count`, [
+      permit([RoleType.ADMIN, RoleType.USER]),
       RequestValidator({
         validators: ListValidator,
         type: VALIDATION_TYPE.REQ_QUERY,
