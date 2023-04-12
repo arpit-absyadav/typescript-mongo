@@ -7,6 +7,7 @@ import {
 } from '../../common/core/middlewares/validation.middleware';
 import { IdValidator, ListValidator } from '../../common/validators';
 import { CreatePostValidator } from './validators';
+import RateLimitor from '../../common/core/middlewares/rate-limiter';
 
 export class PostRoutes implements IRoute {
   public router = Router();
@@ -32,6 +33,11 @@ export class PostRoutes implements IRoute {
       this.postController.getPostListCount,
     ]);
     this.router.get(`/`, [
+      RateLimitor({
+        points: 10, // 10 Requests
+        duration: 10, // 10 Seconds
+        message: 'Too many requests, please try again later.',
+      }),
       RequestValidator({
         validators: ListValidator,
         type: VALIDATION_TYPE.REQ_QUERY,
