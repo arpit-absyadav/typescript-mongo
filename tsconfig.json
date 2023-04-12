@@ -12,9 +12,9 @@
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types", "src/common/custom-typings"],
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "tests/app.test.ts"],
+  "include": ["src/**/*.ts", "tests/app.test.ts", "src/common/custom-typings/express.d.ts"],
   "exclude": ["node_modules", "**/*.test.ts", "**/*.spec.ts"]
 }

@@ -4,6 +4,7 @@ export interface IUser {
   last_name: string;
   gender: string;
   email: string;
+  role: string;
   salt: string;
   hash: string;
   refresh_token?: string;
@@ -19,4 +20,5 @@ export interface ICreateUser {
   gender: string;
   email: string;
   password?: string;
+  role?: string;
 }

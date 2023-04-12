@@ -85,7 +85,9 @@ export class UserService {
    * getOne
    */
   public async getByEmail({ email }: { email: string }): Promise<IUser> {
-    const item = await User.findOne({ email, ...this.deleteCheck });
+    const where = { email, ...this.deleteCheck };
+
+    const item = await User.findOne(where);
 
     if (!item) throw new HttpException(ERROR.NOT_FOUND, 'User not found.');
     return item;

@@ -65,6 +65,7 @@ export class UserController {
 
       const payload: ITokenPayload = {
         email: reqBody.email,
+        role: reqBody.role,
       };
 
       const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
@@ -116,6 +117,7 @@ export class UserController {
 
       const payload: ITokenPayload = {
         email,
+        role: user.role,
       };
 
       const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
