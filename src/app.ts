@@ -13,8 +13,8 @@ export class App {
    * Adding all routes.
    * Initializing Database connection
    */
-  private initializeRoutes = new InitializeRoutes();
   private mongooseManager = new MongooseManager();
+  private initializeRoutes = new InitializeRoutes();
 
   /**
    * Constructor will set required values and initialize middleware and routes.
@@ -26,8 +26,8 @@ export class App {
     /**
      * Initializing Middlewares, Managers and Routes
      */
-    this.initMiddlewares();
     this.initManagers();
+    this.initMiddlewares();
     this.initRoutes();
   }
 
@@ -35,8 +35,11 @@ export class App {
     return this.app;
   }
 
-  private initManagers() {
-    this.mongooseManager.init();
+  private async initManagers() {
+    console.log('ssssss');
+    
+    await this.mongooseManager.init();
+    this.mongooseManager.getInstance()
   }
 
   private initRoutes() {

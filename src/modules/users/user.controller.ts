@@ -56,6 +56,8 @@ export class UserController {
   };
 
   public addUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    console.log('Controller start');
+    
     try {
       const reqBody: ICreateUser = req.body;
 
@@ -68,6 +70,8 @@ export class UserController {
         role: reqBody.role,
       };
 
+      console.log('asdfadfadsfadsf');
+      
       const refreshToken: string = await JWT.signToken(payload, TOKEN_TYPE.REFRESH);
 
       const user: IUser = await this.userService.createOne({
@@ -81,6 +85,8 @@ export class UserController {
       delete user.hash;
       delete user.refresh_token;
 
+      console.log('After db call');
+      
       return success.handler(
         { user, access_token: accessToken, refresh_token: refreshToken },
         req,

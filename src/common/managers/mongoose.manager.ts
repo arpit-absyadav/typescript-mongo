@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose, { Connection } from 'mongoose';
 import { config } from '../../config/index';
 
 export class MongooseManager {
+  private static _instance: Connection;
   private options: mongoose.ConnectOptions = {
     dbName: config.MONGO_DB_NAME,
     auth: {
@@ -10,14 +11,19 @@ export class MongooseManager {
     },
   };
 
-  public async init(): Promise<any> {
-    mongoose
-      .connect(`mongodb+srv://${config.MONGO_HOST}`, this.options)
-      .then(() => {
-        console.log('Connection Established With Database.', );
-      })
-      .catch((err: Error) => {
-        console.error('Unable to connect to the database:', err);
-      });
+  public async init(): Promise<Connection> {
+    if (!MongooseManager._instance) {
+      MongooseManager._instance = await mongoose.createConnection(`mongodb+srv://${config.MONGO_HOST}`, this.options)
+      console.log(MongooseManager._instance);
+      
+    }
+    return MongooseManager._instance;
+  }
+
+  public getInstance(): Connection {
+    if (!MongooseManager._instance) {
+      throw new Error('Mongoose instance not initialized');
+    }
+    return MongooseManager._instance;
   }
 }

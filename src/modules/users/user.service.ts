@@ -1,16 +1,19 @@
 import { ERROR } from './../../common/core/handlers/consts/error';
 import { HttpException } from '../../common/core/handlers/error/HttpException';
-import { User } from './user.model';
 import { ICreateUser, IUser } from './interfaces/user.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
 import { Cache } from '../../common/core/decorators/cache';
+import { ModelManager } from 'common/managers/model.manger';
 interface IGetUser {
   id: string;
 }
 
 export class UserService {
+  private modelManager = new ModelManager();
+  private User = this.modelManager.get('User')
   private privateFields: Record<string, any> = { salt: 0, hash: 0, refresh_token: 0 };
   private deleteCheck: Record<string, any> = { deleted_at: null };
+
   public async getListCount({ status, search }: IRequestQuery | any): Promise<number> {
     const where: Record<string, any> = { ...this.deleteCheck };
 
@@ -98,7 +101,12 @@ export class UserService {
    * @param param0
    */
   public async createOne(data: ICreateUser): Promise<IUser> {
-    return User.create(data);
+    console.log('Reache in user servie');
+    
+    const a = await User.create(data);
+    console.log(a);
+    
+    return a;
   }
 
   public async updateOne(id: string, data: Record<string, any>): Promise<IUser> {
