@@ -57,6 +57,8 @@ export class UserController {
 
   public addUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
+      console.log(config);
+      
       const reqBody: ICreateUser = req.body;
 
       const hashAndSalt = await this.hashPassword({

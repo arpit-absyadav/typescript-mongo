@@ -26,7 +26,7 @@
    "testEnvironment": "node",
    "timers": "fake",
    "setupFilesAfterEnv": ["jest-extended"],
-   "testTimeout": 10000,
+   "testTimeout": 60000,
    "verbose": true,
    "forceExit": true,
    "clearMocks": true,

@@ -1,6 +1,7 @@
 import { STATUS } from './../../consts/status';
-import mongoose, { Document, Schema } from 'mongoose';
+import { Document, Model, Schema } from 'mongoose';
 import { IUser } from './interfaces/user.interface';
+import { MongooseManager } from '../../common/managers/mongoose.manager';
 
 //EXPORT INTERFACE WITH MONGOOSE DOCUMENT
 export interface IUserModel extends IUser, Document {
@@ -57,4 +58,6 @@ const UserSchema: Schema = new Schema(
 );
 
 //EXPORT
-export const User = mongoose.model<IUserModel>('User', UserSchema);
+// export const User:Model<IUser> = MongooseManager.getInstance().model<IUserModel>('User', UserSchema);
+
+export const User: Model<IUser> = MongooseManager.getInstance().getModel<IUserModel>('User', UserSchema);

@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { ICreateUser, IUser } from './interfaces/user.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
 import { Cache } from '../../common/core/decorators/cache';
+import { MongooseManager } from '../../common/managers/mongoose.manager';
 interface IGetUser {
   id: string;
 }
@@ -98,7 +99,15 @@ export class UserService {
    * @param param0
    */
   public async createOne(data: ICreateUser): Promise<IUser> {
-    return User.create(data);
+    console.log('here it comes', data);
+    console.log('here it comes', User);
+    const t = new MongooseManager();
+    console.log(t.serverStatus());
+    
+    const user = await User.create(data);
+    console.log('a', user);
+    return user;
+    
   }
 
   public async updateOne(id: string, data: Record<string, any>): Promise<IUser> {
