@@ -16,8 +16,8 @@ export class MongooseManager {
   public async init() {
     
     await mongoose
-      // .connect(`mongodb+srv://${config.MONGO_HOST}`, this.options)
-      .connect(`mongodb://localhost:27017`,)
+      .connect(`mongodb+srv://${config.MONGO_HOST}`, this.options)
+      // .connect(`mongodb://localhost:27017`,)
       .then(() => {
         console.log('Connection Established With Database.',);
       })
