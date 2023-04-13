@@ -14,7 +14,6 @@ export class MongooseManager {
   };
 
   public async init() {
-    console.log('adadsfadsf');
     
     await mongoose
       // .connect(`mongodb+srv://${config.MONGO_HOST}`, this.options)
@@ -29,7 +28,6 @@ export class MongooseManager {
   }
   public serverStatus () {
     console.log('Db Connection state',mongoose.connection.readyState);
-    
     return {
       state: 'up',
       dbState: mongoose.STATES[mongoose.connection.readyState]

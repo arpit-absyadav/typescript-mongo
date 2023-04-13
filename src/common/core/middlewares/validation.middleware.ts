@@ -7,9 +7,10 @@ import { HttpException } from '../handlers/error/HttpException';
 import { IdValidator } from '../../validators/id.validator';
 
 export enum VALIDATION_TYPE {
-  REQ_BODY = 'body',
-  REQ_QUERY = 'query',
-  REQ_PARAMS = 'params',
+  BODY = 'body',
+  QUERY = 'query',
+  PARAMS = 'params',
+  HEADERS = 'headers',
 }
 
 export interface IValidateRequest {
@@ -39,18 +40,16 @@ export const RequestValidator = ({
 }: IValidateRequest) => {
   return (req: Request, res: Response, next: NextFunction): any => {
     let data = req[type];
-    if (type === VALIDATION_TYPE.REQ_PARAMS || validators instanceof IdValidator) {
-      console.log('Inside');
-
+    
+    if (type === VALIDATION_TYPE.PARAMS || validators instanceof IdValidator) {
       data = { id: req[type][paramName] };
     }
-    console.log(data);
 
     const dataToValidate = plainToInstance(validators, data);
     validateOrReject(dataToValidate, { skipMissingProperties, whitelist, forbidNonWhitelisted })
       .then(() => {
         req[type] = dataToValidate;
-        if (type === VALIDATION_TYPE.REQ_PARAMS || validators instanceof IdValidator) {
+        if (type === VALIDATION_TYPE.PARAMS || validators instanceof IdValidator) {
           req[type] = { [paramName]: data.id, ...req[type] };
           delete req[type]['id'];
         }

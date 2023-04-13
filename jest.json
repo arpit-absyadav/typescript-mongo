@@ -1,35 +1,46 @@
- {
-   "globals": {
-     "ts-jest": {
-       "tsconfig": "tsconfig.json"
-     }
-   },
-   "moduleFileExtensions": [
-     "js",
-     "json",
-     "ts"
-   ],
-   "rootDir": ".",
-   "testRegex": [
-     ".spec.ts$",
-     "tests/.*\\.(ts|tsx)$"
-   ],
-   "transform": {
-     "^.+\\.(t|j)s$": "ts-jest"
-   },
-   "collectCoverageFrom": [
-     "**/*.{js,jsx,ts,tsx}",
-     "!**/*.d.ts",
-     "!**/node_modules/**"
-   ],
-   "coverageDirectory": "coverage",
-   "testEnvironment": "node",
-   "timers": "fake",
-   "setupFilesAfterEnv": ["jest-extended"],
-   "testTimeout": 60000,
-   "verbose": true,
-   "forceExit": true,
-   "clearMocks": true,
-   "resetMocks": true,
-   "restoreMocks": true
- }
+{
+  "globals": {
+    "ts-jest": {
+      "tsconfig": "tsconfig.json"
+    }
+  },
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testRegex": [
+    ".spec.ts$",
+    "tests/.*\\.(ts|tsx)$"
+  ],
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "collectCoverageFrom": [
+    "**/*.{js,jsx,ts,tsx}",
+    "!**/*.d.ts",
+    "!**/node_modules/**"
+  ],
+  "coverageDirectory": "coverage",
+  "testEnvironment": "node",
+  "timers": "fake",
+  "setupFilesAfterEnv": [
+    "jest-extended"
+  ],
+  "testTimeout": 60000,
+  "verbose": true,
+  "forceExit": true,
+  "clearMocks": true,
+  "resetMocks": true,
+  "restoreMocks": true,
+  "preset": "ts-jest",
+  "setupFiles": [
+    "dotenv/config"
+  ],
+  "collectCoverage": true,
+  "coverageReporters": [
+    "text",
+    "html"
+  ]
+}

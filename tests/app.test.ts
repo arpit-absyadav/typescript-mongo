@@ -1,28 +1,23 @@
-// import app from '../src/app';
-// import * as request from 'supertest';
-// import 'jest-extended';
-// jest.useFakeTimers();
+import app from '../src/app'
+import * as db from './test.db'
+import * as  supertest from 'supertest'
+const request = supertest(app)
 
-// const headers = {
-//   'user-id': 1,
-// };
+describe(`/ root API test`, () => {
+  beforeAll(async () => {
+    await db.connect()
+  });
+  afterEach(async () => {
+    await db.clearDatabase()
+  });
+  afterAll(async () => {
+    await db.closeDatabase()
+  });
 
-// beforeEach(async () => {
-//   jest.useFakeTimers();
-// });
+  it('App root API test', async () => {
+    const response = await request.get(`/`)
 
-// const baseUrl = '/';
-// describe(`GET ${baseUrl} - Get All`, () => {
-//   it('Hello API Request', async () => {
-//     const response = await request(app).get(baseUrl).set(headers);
-
-//     expect(response.status).toEqual(200);
-//     expect(response.body).toHaveProperty('data');
-//     expect(response.body).toBeObject();
-//     expect(response.body.data).toHaveProperty('message', 'Welcome');
-//   });
-// });
-it('tt', () => {
-  let obj = { a: '1' };
-  expect(obj).toEqual({ a: '1' });
-});
+    expect(response.status).toEqual(200);
+    expect(response.body.data).toHaveProperty('message', 'Welcome');
+  });
+})

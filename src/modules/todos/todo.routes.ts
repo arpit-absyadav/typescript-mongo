@@ -24,7 +24,7 @@ export class TodoRoutes implements IRoute {
     this.router.post(`/`, [
       auth(TOKEN_TYPE.ACCESS),
       permit([ROLE.ADMIN, ROLE.USER]),
-      RequestValidator({ validators: CreateTodoValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      RequestValidator({ validators: CreateTodoValidator, type: VALIDATION_TYPE.BODY }),
       this.todoController.addTodo,
     ]);
 
@@ -33,7 +33,7 @@ export class TodoRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.todoController.getTodoListCount,
@@ -43,7 +43,7 @@ export class TodoRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.todoController.getTodoList,
@@ -53,7 +53,7 @@ export class TodoRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'todoId',
       }),
       this.todoController.getTodo,
@@ -63,12 +63,12 @@ export class TodoRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'todoId',
       }),
       RequestValidator({
         validators: UpdateTodoValidator,
-        type: VALIDATION_TYPE.REQ_BODY,
+        type: VALIDATION_TYPE.BODY,
         skipMissingProperties: true,
       }),
       this.todoController.updateTodo,
@@ -78,7 +78,7 @@ export class TodoRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'todoId',
       }),
       this.todoController.deleteTodo,

@@ -3,6 +3,7 @@ import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { Post } from './post.model';
 import { ICreatePost, IPost } from './interfaces/post.interface';
 import { IGetOne, IRequestQuery } from '../../common/core/interfaces';
+import { Cache } from '../../common/core/decorators/cache';
 
 export class PostService {
   private deleteCheck: Record<string, any> = { deleted_at: null };
@@ -21,6 +22,7 @@ export class PostService {
     return Post.count(where);
   }
 
+  @Cache(10)
   public async getList({
     page_no,
     page_size,

@@ -30,7 +30,6 @@ export class TodoController {
   ): Promise<Response> => {
     try {
       const reqData = { ...req.query };
-      console.log('palyload', req.user);
 
       let condition = {};
       if (reqData.others) {
@@ -39,7 +38,6 @@ export class TodoController {
         };
       }
 
-      console.log(condition);
 
       if (reqData.ids) {
         reqData.ids = (reqData.ids as string).split(';');

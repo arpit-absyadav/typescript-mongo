@@ -3,6 +3,7 @@ import { InitializeRoutes } from './common/routes/index';
 import { MongooseManager } from './common/managers/mongoose.manager';
 import { error, success } from './common/core/handlers';
 import { IRoute } from './common/core/interfaces';
+import { config } from './config';
 
 export class App {
   public app: express.Application;
@@ -39,11 +40,9 @@ export class App {
   }
 
   private async initManagers() {
-    console.log('Init mangager called');
-    
-    // await this.mongooseManager.init()
-    console.log('Init after called');
-    
+    if (config.ENVIRONMENT !== 'test') {
+      await this.mongooseManager.init();
+    }
   }
 
   private initRoutes() {

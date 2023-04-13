@@ -60,9 +60,6 @@ export class PostController {
 
   public getPost = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
-      console.log('req.params');
-      console.log(req.params);
-
       const { postId } = req.params;
       const post = await this.postService.getOne({
         id: postId,

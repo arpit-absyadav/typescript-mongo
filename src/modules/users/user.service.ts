@@ -3,8 +3,6 @@ import { HttpException } from '../../common/core/handlers/error/HttpException';
 import { User } from './user.model';
 import { ICreateUser, IUser } from './interfaces/user.interface';
 import { IRequestQuery } from '../../common/core/interfaces';
-import { Cache } from '../../common/core/decorators/cache';
-import { MongooseManager } from '../../common/managers/mongoose.manager';
 interface IGetUser {
   id: string;
 }
@@ -26,7 +24,6 @@ export class UserService {
     return User.count(where);
   }
 
-  @Cache(10)
   public async getList({
     page_no,
     page_size,
@@ -36,7 +33,6 @@ export class UserService {
     search,
     ids,
   }: IRequestQuery | any): Promise<IUser[]> {
-    console.log('API Called');
 
     const limit = page_size;
     const skip = (page_no - 1) * limit;
@@ -98,16 +94,8 @@ export class UserService {
    * NOTE: Must return with two type. one with <User> and second with <any>
    * @param param0
    */
-  public async createOne(data: ICreateUser): Promise<IUser> {
-    console.log('here it comes', data);
-    console.log('here it comes', User);
-    const t = new MongooseManager();
-    console.log(t.serverStatus());
-    
-    const user = await User.create(data);
-    console.log('a', user);
-    return user;
-    
+  public async createOne(data: ICreateUser): Promise<IUser> { 
+    return User.create(data); 
   }
 
   public async updateOne(id: string, data: Record<string, any>): Promise<IUser> {

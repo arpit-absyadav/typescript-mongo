@@ -11,6 +11,7 @@ import { CreateUserValidator, SignInUserValidator } from './validatiors';
 import permit from '../../common/core/utils/permit';
 import { ROLE } from './user.enum';
 import { TOKEN_TYPE, auth } from '../../common/core/utils/jwt';
+import { AccessTokenUpdateValidator } from './validatiors/toekn-update.validation';
 
 export class UserRoutes implements IRoute {
   public router = Router();
@@ -23,12 +24,17 @@ export class UserRoutes implements IRoute {
 
   private init() {
     this.router.post(`/signup`, [
-      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      RequestValidator({ validators: CreateUserValidator, type: VALIDATION_TYPE.BODY }),
       this.userController.addUser,
     ]);
     this.router.post(`/signin`, [
-      RequestValidator({ validators: SignInUserValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      RequestValidator({ validators: SignInUserValidator, type: VALIDATION_TYPE.BODY }),
       this.userController.signIn,
+    ]);
+
+    this.router.post(`/update-token`, [
+      RequestValidator({ validators: AccessTokenUpdateValidator, type: VALIDATION_TYPE.HEADERS }),
+      this.userController.updateAccessToken,
     ]);
 
     this.router.get(`/count`, [
@@ -36,7 +42,7 @@ export class UserRoutes implements IRoute {
       permit([ROLE.ADMIN]),
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.userController.getUserListCount,
@@ -47,7 +53,7 @@ export class UserRoutes implements IRoute {
       permit([ROLE.ADMIN]),
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.userController.getUserList,
@@ -57,7 +63,7 @@ export class UserRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'userId',
       }),
       this.userController.getUser,
@@ -67,12 +73,12 @@ export class UserRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'userId',
       }),
       RequestValidator({
         validators: UpdateUserValidator,
-        type: VALIDATION_TYPE.REQ_BODY,
+        type: VALIDATION_TYPE.BODY,
       }),
       this.userController.updateUser,
     ]);
@@ -81,7 +87,7 @@ export class UserRoutes implements IRoute {
       permit([ROLE.ADMIN, ROLE.USER]),
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'userId',
       }),
       this.userController.deleteUser,

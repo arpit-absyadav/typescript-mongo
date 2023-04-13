@@ -72,8 +72,6 @@ export class CommentController {
     next: NextFunction,
   ): Promise<Response> => {
     try {
-      console.log('req.params');
-      console.log(req.params);
 
       const { commentId } = req.params;
       const comment = await this.commentService.getOne({

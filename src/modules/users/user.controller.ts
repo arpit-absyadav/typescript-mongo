@@ -56,9 +56,7 @@ export class UserController {
   };
 
   public addUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
-    try {
-      console.log(config);
-      
+    try {      
       const reqBody: ICreateUser = req.body;
 
       const hashAndSalt = await this.hashPassword({
@@ -108,6 +106,33 @@ export class UserController {
     await this.comparePassword(password, user);
   };
 
+  public updateAccessToken = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    try {
+      
+      const { refresh_token } = req.headers;
+      const decodedData = JWT.decodeToken(String(refresh_token));
+      
+      const user: IUser = await this.userService.getByEmail({
+        email: decodedData.email,
+      });
+
+      const payload: ITokenPayload = {
+        email: decodedData.email,
+        role: user.role,
+      };
+
+      const accessToken: string = await JWT.signToken(payload, TOKEN_TYPE.ACCESS);
+      return success.handler(
+        { access_token: accessToken },
+        req,
+        res,
+        next,
+      );
+    } catch (err) {
+      return error.handler(err, req, res, next);
+    }
+  };
+
   public signIn = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
       const { email, password } = req.body;
@@ -140,11 +165,9 @@ export class UserController {
       return error.handler(err, req, res, next);
     }
   };
+
   public getUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
     try {
-      console.log('req.params');
-      console.log(req.params);
-
       const { userId } = req.params;
       const user = await this.userService.getOne({
         id: userId,

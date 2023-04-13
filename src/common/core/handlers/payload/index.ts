@@ -9,7 +9,6 @@ export default class Payload {
    * @param {*} err Error object
    */
   public errorPayload(err: IErrorPayload | any): any {
-    console.error('------------');
     console.error(err);
     // eslint-disable-next-line prefer-const
     let { name, details = [] } = err;
@@ -114,7 +113,6 @@ export default class Payload {
         });
         break;
     }
-    console.log('payload', payload);
 
     return payload;
   }

@@ -20,14 +20,14 @@ export class PostRoutes implements IRoute {
 
   private init() {
     this.router.post(`/`, [
-      RequestValidator({ validators: CreatePostValidator, type: VALIDATION_TYPE.REQ_BODY }),
+      RequestValidator({ validators: CreatePostValidator, type: VALIDATION_TYPE.BODY }),
       this.postController.addPost,
     ]);
 
     this.router.get(`/count`, [
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.postController.getPostListCount,
@@ -40,7 +40,7 @@ export class PostRoutes implements IRoute {
       }),
       RequestValidator({
         validators: ListValidator,
-        type: VALIDATION_TYPE.REQ_QUERY,
+        type: VALIDATION_TYPE.QUERY,
         skipMissingProperties: true,
       }),
       this.postController.getPostList,
@@ -48,7 +48,7 @@ export class PostRoutes implements IRoute {
     this.router.get(`/:postId`, [
       RequestValidator({
         validators: IdValidator,
-        type: VALIDATION_TYPE.REQ_PARAMS,
+        type: VALIDATION_TYPE.PARAMS,
         paramName: 'postId',
       }),
       this.postController.getPost,
