@@ -8,7 +8,7 @@
     "start:build": "node build/server.js",
     "start": "NODE_PATH=./build node build/server.js",
     "dev": "nodemon src/server.ts",
-    "test": "NODE_ENV=test jest --config ./jest.json  --coverage --detectOpenHandles --forceExit",
+    "test": "NODE_ENV=test jest --config ./jest.json --runInBand  --coverage --detectOpenHandles --forceExit",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "lint": "eslint --ignore-path .gitignore . --ext ts  --ext js ",
     "lint:fix": "eslint --fix --ignore-path .gitignore . --ext ts  --ext js",

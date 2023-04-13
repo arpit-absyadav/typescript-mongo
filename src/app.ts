@@ -34,9 +34,16 @@ export class App {
   public getServer(): express.Application {
     return this.app;
   }
+  public getMongooseManger(): MongooseManager {
+    return this.mongooseManager;
+  }
 
-  private initManagers() {
-    this.mongooseManager.init()
+  private async initManagers() {
+    console.log('Init mangager called');
+    
+    // await this.mongooseManager.init()
+    console.log('Init after called');
+    
   }
 
   private initRoutes() {
@@ -51,6 +58,8 @@ export class App {
     this.app.use(error.handler);
     this.app.use(success.handler);
   }
+
+  
 }
 
 export default new App().app;

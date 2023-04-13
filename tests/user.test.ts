@@ -1,10 +1,10 @@
 import 'jest-extended';
-import app from '../src/app';
+import app, { App } from '../src/app';
 import * as request from 'supertest';
-import { UserService } from '../src/modules/users/user.service';
-import { User } from '../src/modules/users/user.model';
-import { MongooseManager } from '../src/common/managers/mongoose.manager';
-import { IUser } from '../src/modules/users/interfaces/user.interface';
+// import { UserService } from '../src/modules/users/user.service';
+// import { User } from '../src/modules/users/user.model';
+// import { MongooseManager } from '../src/common/managers/mongoose.manager';
+// import { IUser } from '../src/modules/users/interfaces/user.interface';
 jest.setTimeout(30000);
 jest.useFakeTimers();
 
@@ -19,14 +19,20 @@ const headers = {
 beforeEach(async () => {
   jest.useFakeTimers();
 });
-const userService = new UserService();
+// const userService = new UserService();
 const baseUrl = '/';
 describe(`GET ${baseUrl} - Get All`,  () => {
   beforeAll(async () => {
     // Wait for the database connection before running any tests
-   const a = new MongooseManager()
-  await a.init()
-    await MongooseManager.getInstance();
+  //  const a = new MongooseManager()
+  // await a.init()
+  console.log('Before all');
+  
+  const newApp = new App();
+  await newApp.getMongooseManger().init()
+  // await new Promise(resolve => setTimeout(resolve, 5000));
+ console.log('before all end');
+ 
   });
   it('Hello API Request', async () => {
     const response = await request(app).get(baseUrl).set(headers);
