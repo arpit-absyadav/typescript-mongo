@@ -41,6 +41,7 @@ export class MongooseManager {
     return this._database;
   }
 
+  // this will return mongos instance
   public getModel<T extends mongoose.Document>(name: string, schema: mongoose.Schema<T>): Model<T> {
     return mongoose.model<T>(name, schema);
   }
