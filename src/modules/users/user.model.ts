@@ -57,7 +57,6 @@ const UserSchema: Schema = new Schema(
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } },
 );
 
-//EXPORT
 // export const User:Model<IUser> = MongooseManager.getInstance().model<IUserModel>('User', UserSchema);
 
 export const User: Model<IUser> = MongooseManager.getInstance().getModel<IUserModel>('User', UserSchema);
